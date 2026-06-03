@@ -19,7 +19,25 @@ die()     { echo -e "${RED}Error:${NC} $1"; exit 1; }
 
 # ── check for Homebrew ────────────────────────────────────────────────────────
 if ! command -v brew &>/dev/null; then
-    die "Homebrew is required. Install it first:\n  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+    info "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH for the rest of this script
+    if [[ -x "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+
+    # Persist Homebrew in shell config
+    SHELL_RC=""
+    if [[ "$SHELL" == */zsh ]]; then SHELL_RC="$HOME/.zshrc"
+    elif [[ "$SHELL" == */bash ]]; then SHELL_RC="$HOME/.bashrc"; fi
+    if [[ -n "$SHELL_RC" ]] && ! grep -q "brew shellenv" "$SHELL_RC" 2>/dev/null; then
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$SHELL_RC"
+    fi
+else
+    info "Homebrew already installed."
 fi
 
 # ── check for FFmpeg ──────────────────────────────────────────────────────────
