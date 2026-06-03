@@ -40,7 +40,7 @@ def run(rtsp_url: str, ndi_name: str, latency: str = "low") -> None:
     print(f"Opening RTSP stream: {rtsp_url}")
     try:
         container = av.open(rtsp_url, options=options, timeout=10.0)
-    except av.AVError as e:
+    except Exception as e:
         print(f"ERROR: Could not open RTSP stream: {e}")
         ndi.send_destroy(sender)
         ndi.destroy()
@@ -102,7 +102,7 @@ def run(rtsp_url: str, ndi_name: str, latency: str = "low") -> None:
                     elapsed = time.monotonic() - start_time
                     print(f"  {frame_count} frames sent ({frame_count/elapsed:.1f} fps avg)")
 
-    except av.AVError as e:
+    except Exception as e:
         print(f"Stream error: {e}")
     finally:
         container.close()
