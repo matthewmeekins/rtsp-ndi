@@ -6,12 +6,21 @@ This was built mostly using Claude. Use at your own risk
 
 ## Install
 
+### macOS (recommended)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/matthewmeekins/rtsp-ndi/main/install.sh | bash
+```
+
+Requires [Homebrew](https://brew.sh). The script handles FFmpeg, Python, and the package automatically.
+
+### Other platforms
+
 ```bash
 pip install rtsp-ndi
 ```
 
 Also requires **FFmpeg** on your `PATH`:
-- macOS: `brew install ffmpeg`
 - Windows: https://ffmpeg.org/download.html
 - Linux: `sudo apt install ffmpeg`
 
