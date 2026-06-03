@@ -66,7 +66,8 @@ _lib = ctypes.CDLL(_find_dylib())
 
 # ── constants ─────────────────────────────────────────────────────────────────
 
-FOURCC_UYVY = 0x59565955  # packed UYVY — NDI's native format, no conversion needed
+FOURCC_UYVY = 0x59565955  # packed UYVY
+FOURCC_RGBA = 0x41424752  # RGBA — universal fallback, supported by all PyAV sources
 FRAME_FORMAT_PROGRESSIVE = 1
 TIMECODE_SYNTHESIZE = 0x8000000000000000
 

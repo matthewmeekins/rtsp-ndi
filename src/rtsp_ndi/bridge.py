@@ -78,22 +78,22 @@ def run(rtsp_url: str, ndi_name: str, latency: str = "low") -> None:
                 if not running:
                     break
 
-                # UYVY422 is NDI's native packed format — no extra conversion
-                raw = av_frame.to_ndarray(format="uyvy422")
+                # Convert to RGBA — universally supported by PyAV regardless of source format
+                raw = av_frame.to_ndarray(format="rgba")
                 if not raw.flags["C_CONTIGUOUS"]:
                     raw = np.ascontiguousarray(raw)
 
                 ndi_frame = ndi.VideoFrameV2()
                 ndi_frame.xres                 = av_frame.width
                 ndi_frame.yres                 = av_frame.height
-                ndi_frame.FourCC               = ndi.FOURCC_UYVY
+                ndi_frame.FourCC               = ndi.FOURCC_RGBA
                 ndi_frame.frame_rate_N         = int(frame_rate * 1000)
                 ndi_frame.frame_rate_D         = 1000
                 ndi_frame.picture_aspect_ratio = av_frame.width / av_frame.height
                 ndi_frame.frame_format_type    = ndi.FRAME_FORMAT_PROGRESSIVE
                 ndi_frame.timecode             = 0x8000000000000000  # NDI_SEND_TIMECODE_SYNTHESIZE
                 ndi_frame.p_data               = raw.ctypes.data_as(ctypes.c_void_p)
-                ndi_frame.line_stride_or_size  = av_frame.width * 2  # UYVY = 2 bytes/pixel
+                ndi_frame.line_stride_or_size  = av_frame.width * 4  # RGBA = 4 bytes/pixel
 
                 ndi.send_video_v2(sender, ndi_frame)
                 frame_count += 1
