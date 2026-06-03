@@ -2,6 +2,8 @@
 
 Bridge an RTSP stream to an NDI source on your local network.
 
+This was built mostly using Claude. Use at your own risk
+
 ## Install
 
 ```bash
