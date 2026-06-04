@@ -118,12 +118,50 @@ fi
 
 export PATH="$LOCAL_BIN:$PATH"
 
+# ── register launchd service ──────────────────────────────────────────────────
+PLIST="$HOME/Library/LaunchAgents/com.rtsp-ndi.plist"
+EXECUTABLE="$LOCAL_BIN/rtsp-ndi"
+
+if [[ -x "$EXECUTABLE" ]]; then
+    info "Registering launchd service..."
+    LOG_DIR="$HOME/Library/Logs/rtsp-ndi"
+    mkdir -p "$LOG_DIR"
+    cat > "$PLIST" <<PLIST_EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.rtsp-ndi</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$EXECUTABLE</string>
+        <string>run</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>$LOG_DIR/rtsp-ndi.log</string>
+    <key>StandardErrorPath</key>
+    <string>$LOG_DIR/rtsp-ndi.error.log</string>
+</dict>
+</plist>
+PLIST_EOF
+    info "Launchd plist written to $PLIST"
+fi
+
 # ── done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}✓ Installation complete!${NC}"
 echo ""
-echo "Usage:"
-echo "  rtsp-to-ndi --url 'rtsp://user:password@camera-ip/stream' --name 'My Camera'"
+echo "Add cameras, then start the service:"
+echo "  rtsp-ndi add --url 'rtsp://user:password@camera-ip/stream' --name 'Camera 1'"
+echo "  rtsp-ndi start"
 echo ""
-echo "If rtsp-to-ndi is not found, restart your terminal or run:"
+echo "Other commands: rtsp-ndi list | stop | restart | status | remove <name>"
+echo ""
+echo "If rtsp-ndi is not found, restart your terminal or run:"
 echo "  export PATH=\"$LOCAL_BIN:\$PATH\""

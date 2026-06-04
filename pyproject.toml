@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rtsp-ndi"
-version = "0.1.2"
+version = "0.2.0"
 description = "Bridge an RTSP stream to an NDI source"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -28,6 +28,7 @@ Repository = "https://github.com/matthewmeekins/rtsp-ndi"
 
 [project.scripts]
 rtsp-to-ndi = "rtsp_ndi.bridge:main"
+rtsp-ndi    = "rtsp_ndi.service:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
